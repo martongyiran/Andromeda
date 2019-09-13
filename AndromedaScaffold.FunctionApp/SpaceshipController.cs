@@ -56,6 +56,11 @@ namespace AndromedaScaffold
                 //You can use the same logic to add or remove drives, sensors, cannons and shields.
             }
 
+            if (ship.DriveCount < 1)
+            {
+                await NavigationComputer.AddDriveAsync();
+            }
+
             //Sell everything we've brought.
             foreach (var cargoItem in ship.Cargo)
             {
