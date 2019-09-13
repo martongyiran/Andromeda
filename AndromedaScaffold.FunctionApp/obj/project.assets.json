@@ -6911,11 +6911,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/gyima/Desktop/AndromedaScaffold/AndromedaScaffold.FunctionApp/AndromedaScaffold.FunctionApp.csproj",
+      "projectUniqueName": "/Users/gyima/Andromeda/AndromedaScaffold.FunctionApp/AndromedaScaffold.FunctionApp.csproj",
       "projectName": "AndromedaScaffold.FunctionApp",
-      "projectPath": "/Users/gyima/Desktop/AndromedaScaffold/AndromedaScaffold.FunctionApp/AndromedaScaffold.FunctionApp.csproj",
+      "projectPath": "/Users/gyima/Andromeda/AndromedaScaffold.FunctionApp/AndromedaScaffold.FunctionApp.csproj",
       "packagesPath": "/Users/gyima/.nuget/packages/",
-      "outputPath": "/Users/gyima/Desktop/AndromedaScaffold/AndromedaScaffold.FunctionApp/obj/",
+      "outputPath": "/Users/gyima/Andromeda/AndromedaScaffold.FunctionApp/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
