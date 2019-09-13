@@ -34,7 +34,7 @@ namespace AndromedaScaffold
 
             //If we can, buy a larger ship model!
             //This costs a lot of credits, but increases storage space.
-            if (ship.Money > 1000000 && ship.TotalCapacity == 100)
+            if (ship.Money > 1100000 && ship.TotalCapacity == 100)
             {
                 await NavigationComputer.UpgradeShipCapacityTo200Async();
             }
@@ -67,14 +67,15 @@ namespace AndromedaScaffold
             //Let's trade water!
             //Check if any of the nearby stars have a higher price level for water than this star system.
             //If we find such a star we can make a profit by buying water here and selling it there.
-            int localPrice = currentStar.Commodities.Single(i => i.Name == "Water").Price;
-            int maxPrice = stars.Max(i => i.Commodities.Single(j => j.Name == "Water").Price);
+            int localPrice = currentStar.Commodities.Min(i => i.Price);
+            var stuffToBuy = currentStar.Commodities.Where(i => i.Price == localPrice).ToList()[0].Name;
+            int maxPrice = stars.Max(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price);
 
             //Profit can be made by trading water - buy as much as we can, and go to that star!
             if (maxPrice > localPrice)
             {
-                await NavigationComputer.BuyMaximumAsync("Water");
-                var targetStar = stars.First(i => i.Commodities.Single(j => j.Name == "Water").Price == maxPrice);
+                await NavigationComputer.BuyMaximumAsync(stuffToBuy);
+                var targetStar = stars.First(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price == maxPrice);
                 await NavigationComputer.LaunchSpaceshipAsync(targetStar);
             }
             //There is no trade opportunity in water - go to a random star and hope for better luck.
