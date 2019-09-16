@@ -47,7 +47,7 @@ namespace AndromedaScaffold
                 await NavigationComputer.UpgradeShipCapacityTo300Async();
             }
 
-            if (ship.TotalCapacity == 200 && ship.CannonCount < 1)
+            if (ship.TotalCapacity == 200 && ship.CannonCount < 2)
             {
                 await NavigationComputer.AddCannonAsync();
             }
@@ -163,16 +163,20 @@ namespace AndromedaScaffold
             {
                 await NavigationComputer.BuyNewShipAsync();
             }
+            else if (ship.Money > 51000000 && ownedShips.ToList().Count == 2)
+            {
+                await NavigationComputer.BuyNewShipAsync();
+            }
 
             //We can have multiple ships. By checking the value of the currentShip parameter, you can differentiate
             //between your ships and give each of the separate orders.
             //In this example, if this is not the first ship, we'll use it for piracy.
-            
+
             //if (currentShip != ownedShips.First())
             //{
-                //Let's attack the first ship that gets in our sight!
-                //Caution: this only makes sense when you have some cannons equipped.
-                var raidableShips = await NavigationComputer.GetRaidableShipsAsync();
+            //Let's attack the first ship that gets in our sight!
+            //Caution: this only makes sense when you have some cannons equipped.
+            var raidableShips = await NavigationComputer.GetRaidableShipsAsync();
 
                 if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < 40)
                 {
