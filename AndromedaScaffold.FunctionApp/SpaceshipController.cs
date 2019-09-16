@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AndromedaScaffold.FunctionApp;
 
 namespace AndromedaScaffold
 {
@@ -37,6 +38,24 @@ namespace AndromedaScaffold
             if (ship.Money > 1100000 && ship.TotalCapacity == 100)
             {
                 await NavigationComputer.UpgradeShipCapacityTo200Async();
+            }else if (ship.Money > 11000000 && ship.TotalCapacity == 200)
+            {
+                await NavigationComputer.UpgradeShipCapacityTo300Async();
+            }
+
+            if (ship.TotalCapacity == 200 && ship.CannonCount < 2)
+            {
+                await NavigationComputer.AddCannonAsync();
+            }
+
+            if(ship.FreeCapacity > 100)
+            {
+                await NavigationComputer.AddDriveAsync();
+            }
+
+            if(ship.DriveCount > 2)
+            {
+                await NavigationComputer.RemoveDriveAsync();
             }
 
             //If the ship has no extra sensor yet, then purchase one, to see further.
@@ -56,11 +75,6 @@ namespace AndromedaScaffold
                 //You can use the same logic to add or remove drives, sensors, cannons and shields.
             }
 
-            if (ship.DriveCount < 1)
-            {
-                await NavigationComputer.AddDriveAsync();
-            }
-
             //Sell everything we've brought.
             foreach (var cargoItem in ship.Cargo)
             {
@@ -72,17 +86,26 @@ namespace AndromedaScaffold
             //Let's trade water!
             //Check if any of the nearby stars have a higher price level for water than this star system.
             //If we find such a star we can make a profit by buying water here and selling it there.
-            int localPrice = currentStar.Commodities.Min(i => i.Price);
-            var stuffToBuy = currentStar.Commodities.Where(i => i.Price == localPrice).ToList()[0].Name;
-            int maxPrice = stars.Max(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price);
+            /* int localPrice = currentStar.Commodities.Min(i => i.Price);
+             var stuffToBuy = currentStar.Commodities.Where(i => i.Price == localPrice).ToList()[0].Name;
+             int maxPrice = stars.Max(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price);
+
+             */
+
+            var target = TradeHelper.GetPriceDiff(currentStar, stars);
+            if(target != null)
+            {
+                await NavigationComputer.BuyMaximumAsync(target.Item1);
+                await NavigationComputer.LaunchSpaceshipAsync(target.Item2);
+            }
 
             //Profit can be made by trading water - buy as much as we can, and go to that star!
-            if (maxPrice > localPrice)
+            /*if (maxPrice > localPrice)
             {
                 await NavigationComputer.BuyMaximumAsync(stuffToBuy);
                 var targetStar = stars.First(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price == maxPrice);
                 await NavigationComputer.LaunchSpaceshipAsync(targetStar);
-            }
+            }*/
             //There is no trade opportunity in water - go to a random star and hope for better luck.
             else
             {
@@ -108,7 +131,9 @@ namespace AndromedaScaffold
         {
             //Let's try and buy another ship, if we have the money! The first additional ship costs 10 million credits.
             var ship = await NavigationComputer.GetSpaceshipStatusAsync();
-            if (ship.Money > 10000000)
+            var ownedShips = await NavigationComputer.GetOwnedShipsAsync();
+
+            if (ship.Money > 10100000 && ownedShips.ToList().Count == 1)
             {
                 await NavigationComputer.BuyNewShipAsync();
             }
@@ -116,18 +141,18 @@ namespace AndromedaScaffold
             //We can have multiple ships. By checking the value of the currentShip parameter, you can differentiate
             //between your ships and give each of the separate orders.
             //In this example, if this is not the first ship, we'll use it for piracy.
-            var ownedShips = await NavigationComputer.GetOwnedShipsAsync();
-            if (currentShip != ownedShips.First())
-            {
+            
+            //if (currentShip != ownedShips.First())
+            //{
                 //Let's attack the first ship that gets in our sight!
                 //Caution: this only makes sense when you have some cannons equipped.
                 var raidableShips = await NavigationComputer.GetRaidableShipsAsync();
 
-                if (raidableShips.Length > 0)
+                if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < 31)
                 {
                     await NavigationComputer.RaidAsync(raidableShips.First());
                 }
-            }
+            //}
         }
     }
 }
