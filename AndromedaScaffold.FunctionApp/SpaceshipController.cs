@@ -89,10 +89,28 @@ namespace AndromedaScaffold
 
              */
             
-            var target = TradeHelper.GetPriceDiff(currentStar, stars);
+            var target = await TradeHelper.GetPriceDiff(currentStar, stars);
             if(target != null)
             {
                 await NavigationComputer.BuyMaximumAsync(target.Item1);
+                
+                if(await TradeHelper.AvailableCargoSpace() > await TradeHelper.UsedCargoSpace())
+                {
+                    try
+                    {
+                        var item = await TradeHelper.GetSecondMaxDiff(currentStar, target.Item2);
+                        if(item != null)
+                        {
+                           await NavigationComputer.BuyMaximumAsync(item.Item1.ProductName);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine(e.StackTrace);
+                    }
+                    
+                }
+
                 await NavigationComputer.LaunchSpaceshipAsync(target.Item2);
             }
             else
