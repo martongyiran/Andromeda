@@ -148,7 +148,7 @@ namespace AndromedaScaffold
                 //Caution: this only makes sense when you have some cannons equipped.
                 var raidableShips = await NavigationComputer.GetRaidableShipsAsync();
 
-                if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < 31)
+                if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < 40)
                 {
                     await NavigationComputer.RaidAsync(raidableShips.First());
                 }
