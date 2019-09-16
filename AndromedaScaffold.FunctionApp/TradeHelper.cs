@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AndromedaScaffold.WorkerRole.AndromedaServiceReference;
 
 namespace AndromedaScaffold.FunctionApp
@@ -21,7 +22,7 @@ namespace AndromedaScaffold.FunctionApp
 
             if(maxList.Count > 0)
             {
-                var maxList2 = maxList.OrderByDescending(x => x.Item1.DiffPrice).ToList().FirstOrDefault();
+                var maxList2 = maxList.OrderByDescending(x => x.Item1.Profit).ToList().FirstOrDefault();
 
                 try
                 {
@@ -50,14 +51,16 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     if(prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 50)
                     {
-                        maxList.Add(new TradeWrapper(prod.Price - prod2.Price, prod2.Price, prod2.Name));
+                        var profit = (prod.Price - prod2.Price) / target.DistanceInLightYears;
+
+                        maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
                     }
                 }
             }
 
             if(maxList.Count > 0)
             {
-                var value = maxList.OrderByDescending(x => x.DiffPrice).FirstOrDefault();
+                var value = maxList.OrderByDescending(x => x.Profit).FirstOrDefault();
 
                 return new Tuple<TradeWrapper, Star>(value, target);
             }
@@ -72,15 +75,15 @@ namespace AndromedaScaffold.FunctionApp
 
     public class TradeWrapper
     {
-        public int DiffPrice;
+        public double Profit;
 
         public int OriginalPrice;
 
         public string ProductName;
 
-        public TradeWrapper(int diffPrice, int originalPrice, string productName)
+        public TradeWrapper(double profit, int originalPrice, string productName)
         {
-            DiffPrice = diffPrice;
+            Profit = profit;
             OriginalPrice = originalPrice;
             ProductName = productName;
         }
