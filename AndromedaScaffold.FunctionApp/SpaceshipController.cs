@@ -98,21 +98,25 @@ namespace AndromedaScaffold
                 await NavigationComputer.BuyMaximumAsync(target.Item1);
                 await NavigationComputer.LaunchSpaceshipAsync(target.Item2);
             }
-
+            else
+            {
+                var farthestStar = stars.OrderByDescending(x => x.DistanceInLightYears).FirstOrDefault();
+                await NavigationComputer.LaunchSpaceshipAsync(farthestStar);
+            }
             //Profit can be made by trading water - buy as much as we can, and go to that star!
             /*if (maxPrice > localPrice)
             {
                 await NavigationComputer.BuyMaximumAsync(stuffToBuy);
                 var targetStar = stars.First(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price == maxPrice);
                 await NavigationComputer.LaunchSpaceshipAsync(targetStar);
-            }*/
+            }
             //There is no trade opportunity in water - go to a random star and hope for better luck.
             else
             {
                 var rnd = new Random((int)DateTime.Now.Ticks);
                 var randomStar = stars[rnd.Next(0, stars.Length)];
                 await NavigationComputer.LaunchSpaceshipAsync(randomStar);
-            }
+            }*/
         }
 
         /// <summary>
