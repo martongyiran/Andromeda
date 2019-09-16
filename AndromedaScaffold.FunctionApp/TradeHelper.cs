@@ -49,9 +49,11 @@ namespace AndromedaScaffold.FunctionApp
             {
                 foreach(var prod2 in current?.Commodities)
                 {
-                    if(prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 50)
+                    if(prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 0)
                     {
-                        var profit = (prod.Price - prod2.Price) / target.DistanceInLightYears;
+                        var stockSize = prod2.Stock >= 80 ? 80 : prod2.Stock; //It's hardcoded atm
+
+                        var profit = ((prod.Price - prod2.Price) * stockSize) / target.DistanceInLightYears;
 
                         maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
                     }
