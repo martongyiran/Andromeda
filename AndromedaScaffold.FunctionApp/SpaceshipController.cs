@@ -2,14 +2,17 @@
  * Commissioned by Microsoft Hungary. */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AndromedaScaffold.FunctionApp;
+using AndromedaScaffold.WorkerRole.AndromedaServiceReference;
 
 namespace AndromedaScaffold
 {
     public static class SpaceshipController
     {
+
         /// <summary>
         /// This method is called automatically when your ship lands on a planet.
         /// You can use this method to purchase commodities, equip your ship and launch it towards another star system.
@@ -43,12 +46,12 @@ namespace AndromedaScaffold
                 await NavigationComputer.UpgradeShipCapacityTo300Async();
             }
 
-            if (ship.TotalCapacity == 200 && ship.CannonCount < 2)
+            if (ship.TotalCapacity == 200 && ship.CannonCount < 1)
             {
                 await NavigationComputer.AddCannonAsync();
             }
 
-            if(ship.FreeCapacity > 100)
+            if(ship.FreeCapacity > 200)
             {
                 await NavigationComputer.AddDriveAsync();
             }
@@ -58,21 +61,15 @@ namespace AndromedaScaffold
                 await NavigationComputer.RemoveDriveAsync();
             }
 
-            //If the ship has no extra sensor yet, then purchase one, to see further.
-            //(This increases sensor range to 70 light years from 50 light years, but decreases available
-            //cargo space from 100 to 80 units - this is probably worth it.)
-            if (ship.SensorCount == 0)
+           
+            if (ship.SensorCount < 3)
             {
-                //These method calls do not throw exceptions, to avoid disrupting program flow.
-                //Instead they return any error as a string.
+               
                 await NavigationComputer.AddSensorAsync();
-
-                //Refresh ship status and visible stars right away (we'll quite possible see more stars, since
-                //our sensor range has increased).
+                
                 ship = await NavigationComputer.GetSpaceshipStatusAsync();
                 stars = await NavigationComputer.GetVisibleStarsAsync();
 
-                //You can use the same logic to add or remove drives, sensors, cannons and shields.
             }
 
             //Sell everything we've brought.
@@ -91,7 +88,7 @@ namespace AndromedaScaffold
              int maxPrice = stars.Max(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price);
 
              */
-
+            
             var target = TradeHelper.GetPriceDiff(currentStar, stars);
             if(target != null)
             {
@@ -100,8 +97,9 @@ namespace AndromedaScaffold
             }
             else
             {
-                var farthestStar = stars.OrderByDescending(x => x.DistanceInLightYears).FirstOrDefault();
-                await NavigationComputer.LaunchSpaceshipAsync(farthestStar);
+                var rnd = new Random((int)DateTime.Now.Ticks);
+                var randomStar = stars[rnd.Next(0, stars.Length)];
+                await NavigationComputer.LaunchSpaceshipAsync(randomStar);
             }
             //Profit can be made by trading water - buy as much as we can, and go to that star!
             /*if (maxPrice > localPrice)
@@ -110,13 +108,7 @@ namespace AndromedaScaffold
                 var targetStar = stars.First(i => i.Commodities.Single(j => j.Name == stuffToBuy).Price == maxPrice);
                 await NavigationComputer.LaunchSpaceshipAsync(targetStar);
             }
-            //There is no trade opportunity in water - go to a random star and hope for better luck.
-            else
-            {
-                var rnd = new Random((int)DateTime.Now.Ticks);
-                var randomStar = stars[rnd.Next(0, stars.Length)];
-                await NavigationComputer.LaunchSpaceshipAsync(randomStar);
-            }*/
+           */
         }
 
         /// <summary>
