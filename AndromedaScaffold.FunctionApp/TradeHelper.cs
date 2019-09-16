@@ -137,6 +137,8 @@ namespace AndromedaScaffold.FunctionApp
                     usedCargo += item.Stock;
                 }
 
+                System.Diagnostics.Debug.WriteLine("Used cargo space: " + usedCargo);
+
                 return usedCargo;
             }
             catch(Exception e)
@@ -154,6 +156,8 @@ namespace AndromedaScaffold.FunctionApp
             {
                 var ship = await NavigationComputer.GetSpaceshipStatusAsync();
 
+                System.Diagnostics.Debug.WriteLine("Available Cargo Space: " + (ship.TotalCapacity - await EquipementSpace()));
+
                 return ship.TotalCapacity - await EquipementSpace();
             }
             catch (Exception e)
@@ -170,7 +174,7 @@ namespace AndromedaScaffold.FunctionApp
             try
             {
                 var ship = await NavigationComputer.GetSpaceshipStatusAsync();
-
+                System.Diagnostics.Debug.WriteLine("Equipement space: " + ((ship.CannonCount + ship.DriveCount + ship.SensorCount + ship.ShieldCount) * 20));
                 return (ship.CannonCount + ship.DriveCount + ship.SensorCount + ship.ShieldCount) * 20;
             }
             catch (Exception e)
