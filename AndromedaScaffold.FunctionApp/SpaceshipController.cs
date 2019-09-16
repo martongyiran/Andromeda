@@ -41,7 +41,8 @@ namespace AndromedaScaffold
             if (ship.Money > 1100000 && ship.TotalCapacity == 100)
             {
                 await NavigationComputer.UpgradeShipCapacityTo200Async();
-            }else if (ship.Money > 11000000 && ship.TotalCapacity == 200)
+            }
+            else if (ship.Money > 11000000 && ship.TotalCapacity == 200)
             {
                 await NavigationComputer.UpgradeShipCapacityTo300Async();
             }
@@ -51,7 +52,7 @@ namespace AndromedaScaffold
                 await NavigationComputer.AddCannonAsync();
             }
 
-            if(ship.FreeCapacity > 200)
+            if(ship.TotalCapacity == 200 && ship.DriveCount < 2)
             {
                 await NavigationComputer.AddDriveAsync();
             }
@@ -61,15 +62,26 @@ namespace AndromedaScaffold
                 await NavigationComputer.RemoveDriveAsync();
             }
 
-           
-            if (ship.SensorCount < 3)
+            if (ship.SensorCount > 1 && ship.TotalCapacity < 200)
+            {
+                await NavigationComputer.RemoveSensorAsync();
+            }
+
+
+            if (ship.TotalCapacity == 200 && ship.SensorCount < 3)
             {
                
                 await NavigationComputer.AddSensorAsync();
                 
                 ship = await NavigationComputer.GetSpaceshipStatusAsync();
                 stars = await NavigationComputer.GetVisibleStarsAsync();
+            }
+            else if(ship.TotalCapacity == 100 && ship.SensorCount < 1)
+            {
+                await NavigationComputer.AddSensorAsync();
 
+                ship = await NavigationComputer.GetSpaceshipStatusAsync();
+                stars = await NavigationComputer.GetVisibleStarsAsync();
             }
 
             //Sell everything we've brought.
