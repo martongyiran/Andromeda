@@ -47,7 +47,7 @@ namespace AndromedaScaffold
                 await NavigationComputer.UpgradeShipCapacityTo300Async();
             }
 
-            if (ship.TotalCapacity == 200 && ship.CannonCount < 2)
+            if (ship.TotalCapacity == 200 && ship.CannonCount < 1)
             {
                 await NavigationComputer.AddCannonAsync();
             }
