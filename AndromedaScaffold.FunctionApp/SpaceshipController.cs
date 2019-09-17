@@ -51,13 +51,21 @@ namespace AndromedaScaffold
             {
                 await NavigationComputer.AddCannonAsync();
             }
+            else if (ship.TotalCapacity == 300 && ship.CannonCount < 2)
+            {
+                await NavigationComputer.AddCannonAsync();
+            }
 
-            if(ship.TotalCapacity == 200 && ship.DriveCount < 2)
+            if (ship.TotalCapacity == 200 && ship.DriveCount < 2)
+            {
+                await NavigationComputer.AddDriveAsync();
+            }
+            else if (ship.TotalCapacity == 300 && ship.DriveCount < 3)
             {
                 await NavigationComputer.AddDriveAsync();
             }
 
-            if(ship.DriveCount > 2)
+            if (ship.DriveCount > 2)
             {
                 await NavigationComputer.RemoveDriveAsync();
             }
