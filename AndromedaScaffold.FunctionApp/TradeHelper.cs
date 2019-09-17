@@ -91,7 +91,7 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     foreach (var prod2 in current?.Commodities)
                     {
-                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 0)
+                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 50)
                         {
                             var cargoSize = await AvailableCargoSpace();
 
