@@ -24,9 +24,21 @@ namespace AndromedaScaffold.FunctionApp
 
                 if (maxList.Count > 0)
                 {
+                    var ship = await NavigationComputer.GetSpaceshipStatusAsync();
                     var maxList2 = maxList.OrderByDescending(x => x.Item1.Profit).ToList().FirstOrDefault();
-
-                    return new Tuple<string, Star>(maxList2.Item1.ProductName, maxList2.Item2);
+                    if(maxList2.Item1.Profit > 10000)
+                    {
+                        return new Tuple<string, Star>(maxList2.Item1.ProductName, maxList2.Item2);
+                    }
+                    else if(ship.Money < 100000)
+                    {
+                        return new Tuple<string, Star>(maxList2.Item1.ProductName, maxList2.Item2);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    
                 }
                 else
                 {
@@ -91,7 +103,7 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     foreach (var prod2 in current?.Commodities)
                     {
-                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod2.Stock > 50)
+                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod2.Stock > 0)
                         {
                             var cargoSize = await AvailableCargoSpace();
 
@@ -99,7 +111,10 @@ namespace AndromedaScaffold.FunctionApp
 
                             var profit = ((prod.Price - prod2.Price) * stockSize) / target.DistanceInLightYears;
 
-                            maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
+                            if(profit > 0)
+                            {
+                                maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
+                            }
                         }
                     }
                 }

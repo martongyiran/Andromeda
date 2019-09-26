@@ -65,7 +65,7 @@ namespace AndromedaScaffold
                 await NavigationComputer.AddDriveAsync();
             }
 
-            if (ship.TotalCapacity == 200 && ship.SensorCount < 3)
+            if (ship.TotalCapacity == 200 && ship.SensorCount < 2)
             {
                
                 await NavigationComputer.AddSensorAsync();
