@@ -50,7 +50,7 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     foreach (var prod2 in current?.Commodities)
                     {
-                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 0)
+                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod2.Stock > 0)
                         {
                             var cargoSize = await AvailableCargoSpace();
 
@@ -91,7 +91,7 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     foreach (var prod2 in current?.Commodities)
                     {
-                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod.Stock > 0 && prod2.Stock > 50)
+                        if (prod2.Name == prod.Name && prod.Price - prod2.Price > 0 && prod2.Stock > 50)
                         {
                             var cargoSize = await AvailableCargoSpace();
 
@@ -177,6 +177,22 @@ namespace AndromedaScaffold.FunctionApp
                 throw e;
             }
             
+        }
+
+        public static async Task<int> CannonRange()
+        {
+            try
+            {
+                var ship = await NavigationComputer.GetSpaceshipStatusAsync();
+                return ship.CannonCount * 10;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
+
+                throw e;
+            }
+
         }
 
     }

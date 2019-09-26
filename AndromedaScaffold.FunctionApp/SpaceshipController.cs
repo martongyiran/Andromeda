@@ -47,29 +47,23 @@ namespace AndromedaScaffold
                 await NavigationComputer.UpgradeShipCapacityTo300Async();
             }
 
-            if (ship.TotalCapacity == 200 && ship.CannonCount < 1)
+            /*if (ship.TotalCapacity == 200 && ship.CannonCount < 1)
             {
                 await NavigationComputer.AddCannonAsync();
             }
             else if (ship.TotalCapacity == 300 && ship.CannonCount < 2)
             {
                 await NavigationComputer.AddCannonAsync();
-            }
+            }*/
 
             if (ship.TotalCapacity == 200 && ship.DriveCount < 2)
             {
                 await NavigationComputer.AddDriveAsync();
             }
-            else if (ship.TotalCapacity == 300 && ship.DriveCount < 3)
+            else if (ship.TotalCapacity == 300 && ship.DriveCount < 4)
             {
                 await NavigationComputer.AddDriveAsync();
             }
-            
-            if (ship.SensorCount > 1 && ship.TotalCapacity < 200)
-            {
-                await NavigationComputer.RemoveSensorAsync();
-            }
-
 
             if (ship.TotalCapacity == 200 && ship.SensorCount < 3)
             {
@@ -181,7 +175,7 @@ namespace AndromedaScaffold
             //Caution: this only makes sense when you have some cannons equipped.
             var raidableShips = await NavigationComputer.GetRaidableShipsAsync();
 
-                if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < 40 && await TradeHelper.AvailableCargoSpace() > 0)
+                if (raidableShips.Length > 0 && ship.CannonCount > 0 && raidableShips.First().Distance < await TradeHelper.CannonRange() && await TradeHelper.AvailableCargoSpace() > 0)
                 {
                     await NavigationComputer.RaidAsync(raidableShips.First());
                 }
