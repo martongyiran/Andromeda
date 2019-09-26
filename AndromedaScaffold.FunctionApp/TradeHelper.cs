@@ -26,7 +26,7 @@ namespace AndromedaScaffold.FunctionApp
                 {
                     var ship = await NavigationComputer.GetSpaceshipStatusAsync();
                     var maxList2 = maxList.OrderByDescending(x => x.Item1.Profit).ToList().FirstOrDefault();
-                    if(maxList2.Item1.Profit > 10000)
+                    if(maxList2.Item1.TotalProfit > 10000)
                     {
                         return new Tuple<string, Star>(maxList2.Item1.ProductName, maxList2.Item2);
                     }
@@ -70,7 +70,9 @@ namespace AndromedaScaffold.FunctionApp
 
                             var profit = ((prod.Price - prod2.Price) * stockSize) / target.DistanceInLightYears;
 
-                            maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
+                            var totalProfit = (prod.Price - prod2.Price) * stockSize;
+
+                            maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name, totalProfit));
                         }
                     }
                 }
@@ -111,9 +113,11 @@ namespace AndromedaScaffold.FunctionApp
 
                             var profit = ((prod.Price - prod2.Price) * stockSize) / target.DistanceInLightYears;
 
-                            if(profit > 0)
+                            var totalProfit = (prod.Price - prod2.Price) * stockSize;
+
+                            if (profit > 0)
                             {
-                                maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name));
+                                maxList.Add(new TradeWrapper(profit, prod2.Price, prod2.Name, totalProfit));
                             }
                         }
                     }
@@ -220,11 +224,14 @@ namespace AndromedaScaffold.FunctionApp
 
         public string ProductName;
 
-        public TradeWrapper(double profit, int originalPrice, string productName)
+        public int TotalProfit;
+
+        public TradeWrapper(double profit, int originalPrice, string productName, int totalProfit)
         {
             Profit = profit;
             OriginalPrice = originalPrice;
             ProductName = productName;
+            TotalProfit = totalProfit;
         }
     }
     
